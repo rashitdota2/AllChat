@@ -15,5 +15,4 @@ type ServiceInterface interface {
 type AuthService interface {
 	Sign(ctx context.Context, info models.SignIn) error
 	Login(ctx context.Context, auth models.Auth) (string, string, error)
-	Refresh(ctx context.Context, token string) (string, string, error)
 }

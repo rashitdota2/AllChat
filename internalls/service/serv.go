@@ -4,14 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/dgrijalva/jwt-go"
 	"github.com/go-redis/redis/v8"
 	"github.com/jackc/pgx/v4"
 	"go.uber.org/zap"
 	"os"
-	"strconv"
-	"strings"
-	"time"
 	"workwithimages/domain/infrastructure"
 	"workwithimages/domain/models"
 	"workwithimages/internalls/repository"
@@ -54,30 +50,8 @@ func (srv *Service) Login(ctx context.Context, info models.Auth) (string, string
 		srv.logger.Error("failed to gen tokens", zap.Error(err))
 		return "", "", err
 	}
-	if err = srv.rdc.Set(ctx, refresh, fmt.Sprintf("%d_%s", id, name), time.Hour*24*60).Err(); err != nil {
-		srv.logger.Error("failed to set tokens", zap.Error(err))
-		return "", "", err
-	}
-	return access, refresh, nil
-}
 
-func (srv *Service) Refresh(ctx context.Context, token string) (string, string, error) {
-	info, err := srv.rdc.Get(ctx, token).Result()
-	if err != nil {
-		srv.logger.Error("failed to get token", zap.Error(err))
-		return "", "", err
-	}
-	if info == "" {
-		return "", "", jwt.ErrInvalidKey
-	}
-	user := strings.Split(info, "_")
-	id, _ := strconv.Atoi(user[0])
-	acs, rt, err := GetTokens(id, user[1])
-	if err != nil {
-		srv.logger.Error("failed to get tokens", zap.Error(err))
-		return "", "", err
-	}
-	return acs, rt, nil
+	return access, refresh, nil
 }
 
 func (srv *Service) GetProfile(ctx context.Context, userId int) (models.UserProfile, error) {

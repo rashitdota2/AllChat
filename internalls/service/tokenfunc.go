@@ -23,7 +23,7 @@ func GetTokens(id int, name string) (string, string, error) {
 	}()
 	go func() {
 		defer wg.Done()
-		refresh, temperr = RefreshToken(id)
+		refresh, temperr = RefreshToken(id, name)
 		if temperr != nil {
 			err = temperr
 		}
@@ -48,12 +48,13 @@ func AccessToken(id int, name string) (string, error) {
 	return acs, err
 }
 
-func RefreshToken(id int) (string, error) {
+func RefreshToken(id int, name string) (string, error) {
 	claims := models.TokenClaims{
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(models.RefreshTime).Unix(),
 		},
 		UserId: id,
+		Name:   name,
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS384, claims)
 	return token.SignedString([]byte("secret"))

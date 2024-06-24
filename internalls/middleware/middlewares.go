@@ -4,7 +4,9 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strings"
 	"workwithimages/domain/models"
+	"workwithimages/internalls/service"
 )
 
 func Cors(ctx *gin.Context) {
@@ -21,11 +23,13 @@ func Cors(ctx *gin.Context) {
 }
 
 func Auth(ctx *gin.Context) {
-	tokenstr := ctx.GetHeader("Authorization")
-	if tokenstr == "" {
+	info := ctx.GetHeader("Authorization")
+	if info == "" {
 		ctx.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
+	infos := strings.Split(info, " ")
+	prefix, tokenstr := infos[0], infos[1]
 	claims := models.TokenClaims{}
 	token, err := jwt.ParseWithClaims(tokenstr, &claims, func(token *jwt.Token) (interface{}, error) {
 		return []byte("secret"), nil
@@ -36,6 +40,18 @@ func Auth(ctx *gin.Context) {
 	}
 	if !token.Valid {
 		ctx.AbortWithStatus(401)
+		return
+	}
+	if prefix == "Refresh" {
+		acs, rt, err := service.GetTokens(claims.UserId, claims.Name)
+		if err != nil {
+			ctx.AbortWithStatusJSON(500, gin.H{"status": "error"})
+			return
+		}
+		ctx.AbortWithStatusJSON(http.StatusResetContent, gin.H{
+			"access":  acs,
+			"refresh": rt,
+		})
 		return
 	}
 	ctx.Set("claims", claims)
