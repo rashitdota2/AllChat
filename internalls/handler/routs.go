@@ -15,7 +15,6 @@ func (h *Handler) Rout(r *gin.Engine) {
 
 	r.POST("/sign-in", h.Sign)
 	r.POST("/login", h.Login)
-	r.GET("/refresh", h.Refresh)
 	//
 	r.Use(middleware.Auth, h.GetClaims)
 	r.POST("/avatar", h.UpdAvatar)

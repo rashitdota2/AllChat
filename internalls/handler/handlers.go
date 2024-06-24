@@ -2,7 +2,6 @@ package handler
 
 import (
 	"errors"
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"io/ioutil"
@@ -65,27 +64,6 @@ func (h *Handler) Login(ctx *gin.Context) {
 	if err != nil {
 		if errors.Is(err, infrastructure.ErrIncorrectInfo) {
 			ctx.JSON(400, gin.H{"error": err.Error()})
-		}
-		ctx.JSON(500, gin.H{"error": infrastructure.ServerError})
-		return
-	}
-	ctx.JSON(200, map[string]interface{}{
-		"access":  access,
-		"refresh": refresh,
-	})
-}
-
-func (h *Handler) Refresh(ctx *gin.Context) {
-	var token string
-	err := ctx.ShouldBindJSON(&token)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": infrastructure.BadRequest})
-	}
-	access, refresh, err := h.Serv.Refresh(ctx, token)
-	if err != nil {
-		if errors.Is(err, jwt.ErrInvalidKey) {
-			ctx.JSON(400, gin.H{"error": "Invalid refresh token"})
-			return
 		}
 		ctx.JSON(500, gin.H{"error": infrastructure.ServerError})
 		return
