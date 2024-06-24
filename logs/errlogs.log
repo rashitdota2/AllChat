@@ -1,0 +1,22 @@
+{"level":"error","ts":"2024-06-11T17:14:03.974+0500","caller":"service/serv.go:24","msg":"failed to register user","error":"WRONGTYPE Operation against a key holding the wrong kind of value"}
+{"level":"error","ts":"2024-06-11T17:24:55.354+0500","caller":"service/serv.go:24","msg":"failed to register user","error":"already exist"}
+{"level":"error","ts":"2024-06-11T17:25:17.714+0500","caller":"service/serv.go:24","msg":"failed to register user","error":"already exist"}
+{"level":"error","ts":"2024-06-11T17:25:20.804+0500","caller":"service/serv.go:24","msg":"failed to register user","error":"already exist"}
+{"level":"error","ts":"2024-06-11T23:11:05.675+0500","caller":"service/serv.go:28","msg":"failed to register user","error":"ERROR: column \"login\" of relation \"users\" does not exist (SQLSTATE 42703)"}
+{"level":"error","ts":"2024-06-23T14:17:27.676+0500","caller":"service/serv.go:49","msg":"failed to check user","error":"ERROR: column \"id\" does not exist (SQLSTATE 42703)"}
+{"level":"error","ts":"2024-06-23T14:19:06.030+0500","caller":"service/serv.go:37","msg":"failed to register user","error":"ERROR: duplicate key value violates unique constraint \"users_login_key\" (SQLSTATE 23505)"}
+{"level":"error","ts":"2024-06-23T14:21:13.389+0500","caller":"service/serv.go:49","msg":"failed to check user","error":"ERROR: column \"id\" does not exist (SQLSTATE 42703)"}
+{"level":"error","ts":"2024-06-23T14:22:28.732+0500","caller":"service/serv.go:54","msg":"failed to gen tokens","error":"key is invalid"}
+{"level":"error","ts":"2024-06-23T14:25:13.682+0500","caller":"service/serv.go:54","msg":"failed to gen tokens","error":"key is invalid"}
+{"level":"error","ts":"2024-06-23T14:27:18.017+0500","caller":"service/serv.go:54","msg":"failed to gen tokens","error":"key is invalid"}
+{"level":"error","ts":"2024-06-23T14:30:37.328+0500","caller":"service/serv.go:58","msg":"failed to set tokens","error":"ERR wrong number of arguments for 'hset' command"}
+{"level":"error","ts":"2024-06-23T14:52:23.223+0500","caller":"service/serv.go:87","msg":"failed to get profile","error":"can't scan into dest[2]: cannot scan null into *string"}
+{"level":"error","ts":"2024-06-23T14:57:29.592+0500","caller":"service/serv.go:87","msg":"failed to get profile","error":"can't scan into dest[3]: cannot scan null into *string"}
+{"level":"error","ts":"2024-06-23T15:01:05.909+0500","caller":"service/serv.go:118","msg":"failed to write image to file","error":"invalid argument"}
+{"level":"error","ts":"2024-06-23T15:03:38.628+0500","caller":"service/serv.go:130","msg":"failed to open file","error":"open ./avatars/1/avatar.png: no such file or directory"}
+{"level":"error","ts":"2024-06-23T15:05:33.534+0500","caller":"service/serv.go:130","msg":"failed to open file","error":"open ./avatars/1/avatar.png: no such file or directory"}
+{"level":"error","ts":"2024-06-23T15:15:07.046+0500","caller":"service/serv.go:130","msg":"failed to open file","error":"open avatars/1/avatar.png: no such file or directory"}
+{"level":"error","ts":"2024-06-23T15:15:46.106+0500","caller":"service/serv.go:130","msg":"failed to open file","error":"open avatars/1/avatar.png: no such file or directory"}
+{"level":"error","ts":"2024-06-23T15:26:37.954+0500","caller":"service/serv.go:130","msg":"failed to open file","error":"open avatars/user_1.png: no such file or directory"}
+{"level":"error","ts":"2024-06-23T15:27:45.921+0500","caller":"service/serv.go:134","msg":"failed to open file","error":"open avatars/user_1.png: no such file or directory"}
+{"level":"error","ts":"2024-06-23T15:33:32.398+0500","caller":"service/serv.go:134","msg":"failed to open file","error":"open avatars/user_1.jpeg: no such file or directory"}

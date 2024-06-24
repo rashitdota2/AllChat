@@ -5,8 +5,23 @@ import (
 	"workwithimages/internalls/middleware"
 )
 
-func (h *Handler) Init() {
+func (h *Handler) Init() *gin.Engine {
 	r := gin.Default()
-	r.Use(middleware.Token)
+	h.Rout(r)
+	return r
+}
+func (h *Handler) Rout(r *gin.Engine) {
+	r.Use(middleware.Cors)
+
+	r.POST("/sign-in", h.Sign)
+	r.POST("/login", h.Login)
+	r.GET("/refresh", h.Refresh)
+	//
+	r.Use(middleware.Auth, h.GetClaims)
+	r.POST("/avatar", h.UpdAvatar)
+	r.GET("/avatar", h.GetAvatar)
+	r.GET("/profile", h.GetProfile)
+	r.POST("/profile/update", h.UpdateProfile)
+	r.GET("/socket", h.GiveSocket)
 
 }

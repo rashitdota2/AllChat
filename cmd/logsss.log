@@ -1,4 +1,0 @@
-2024/06/09 19:08:06 qwe
-2024/06/09 19:09:41 strconv.Atoi: parsing "2.9": invalid syntax
-2024/06/09 19:10:10 qwe
-err2024/06/09 19:12:40 strconv.Atoi: parsing "2.8": invalid syntax
