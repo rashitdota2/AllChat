@@ -10,4 +10,6 @@ In this chat you can:
 
 Technologies that are using in this chat: redis, psql, websocket, jwt auth.
 
+P.S: At the start it was project just for try work with images, thats why module name like this. :D
+
 
