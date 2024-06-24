@@ -20,3 +20,4 @@
 {"level":"error","ts":"2024-06-23T15:26:37.954+0500","caller":"service/serv.go:130","msg":"failed to open file","error":"open avatars/user_1.png: no such file or directory"}
 {"level":"error","ts":"2024-06-23T15:27:45.921+0500","caller":"service/serv.go:134","msg":"failed to open file","error":"open avatars/user_1.png: no such file or directory"}
 {"level":"error","ts":"2024-06-23T15:33:32.398+0500","caller":"service/serv.go:134","msg":"failed to open file","error":"open avatars/user_1.jpeg: no such file or directory"}
+{"level":"error","ts":"2024-06-24T17:53:08.540+0500","caller":"service/serv.go:107","msg":"failed to get avatar","error":"redis: nil"}

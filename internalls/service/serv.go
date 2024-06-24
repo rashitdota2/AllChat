@@ -98,45 +98,41 @@ func (srv *Service) UpdateProfile(ctx context.Context, profile models.UserProfil
 	return nil
 }
 
-func (srv *Service) UpdAvatar(ctx context.Context, claims models.TokenClaims, img []byte) error {
+func (srv *Service) UpdAvatar(ctx context.Context, claims models.TokenClaims, img []byte, ext string) error {
+	//need convert image to another format
 	// need to add go
-	paht := fmt.Sprintf("avatars/user_%d.png", claims.UserId)
-	exist, err := srv.rdc.HExists(ctx, "avatars", fmt.Sprintf("%d", claims.UserId)).Result()
-	if err != nil {
-		srv.logger.Error("failed to check avatar on exist", zap.Error(err))
-		return err
-	}
-	if !exist {
-		if err = srv.rdc.HSet(ctx, "avatars", claims.UserId, paht).Err(); err != nil {
-			srv.logger.Error("failed to set into rdc avatar", zap.Error(err))
-			return err
-		}
-		file, err := os.Create(paht)
-		defer file.Close()
-		_, err = file.Write(img)
+	id := fmt.Sprintf("%d", claims.UserId)
+	if exist, _ := srv.rdc.HExists(ctx, "avatars", id).Result(); exist {
+		oldPath, err := srv.rdc.HGet(ctx, "avatars", id).Result()
 		if err != nil {
-			srv.logger.Error("failed to write image to file", zap.Error(err))
+			srv.logger.Error("failed to get avatar", zap.Error(err))
 			return err
 		}
-		err = srv.r.SetAvatar(ctx, claims.UserId, paht)
+		err = os.Remove(oldPath)
 		if err != nil {
-			srv.logger.Error("failed to set into psql avatar", zap.Error(err))
+			srv.logger.Error("failed to remove old avatar", zap.Error(err))
 			return err
 		}
-		return nil
 	}
-	file, err := os.OpenFile(paht, os.O_RDWR|os.O_TRUNC, os.ModePerm)
+
+	paht := fmt.Sprintf("avatars/user_%d.%s", claims.UserId, ext)
+
+	file, err := os.OpenFile(paht, os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.ModePerm)
 	if err != nil {
 		srv.logger.Error("failed to open file", zap.Error(err))
 		return err
 	}
 	defer file.Close()
-	if err = file.Truncate(0); err != nil {
-		srv.logger.Error("failed to truncate file", zap.Error(err))
+	if _, err = file.Write(img); err != nil {
+		srv.logger.Error("failed to write file", zap.Error(err))
 		return err
 	}
-	if _, err = file.Write(img); err != nil {
-		srv.logger.Error("failed to write image to file", zap.Error(err))
+	if err = srv.rdc.HSet(ctx, "avatars", claims.UserId, paht).Err(); err != nil {
+		srv.logger.Error("failed to set avatar", zap.Error(err))
+		return err
+	}
+	if err = srv.r.SetAvatar(ctx, claims.UserId, paht); err != nil {
+		srv.logger.Error("failed to set avatar", zap.Error(err))
 		return err
 	}
 	return nil

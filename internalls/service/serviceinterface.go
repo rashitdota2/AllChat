@@ -9,7 +9,7 @@ type ServiceInterface interface {
 	AuthService
 	GetProfile(ctx context.Context, userId int) (models.UserProfile, error)
 	UpdateProfile(ctx context.Context, profile models.UserProfile, userId int) error
-	UpdAvatar(ctx context.Context, claims models.TokenClaims, img []byte) error
+	UpdAvatar(ctx context.Context, claims models.TokenClaims, img []byte, ext string) error
 }
 
 type AuthService interface {

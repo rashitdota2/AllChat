@@ -5,7 +5,9 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"io/ioutil"
 	"net/http"
+	"strings"
 	"workwithimages/domain/infrastructure"
 	"workwithimages/domain/models"
 	"workwithimages/internalls/service"
@@ -125,13 +127,13 @@ func (h *Handler) GetAvatar(ctx *gin.Context) {
 }
 
 func (h *Handler) UpdAvatar(ctx *gin.Context) {
-
-	img, err := ctx.GetRawData()
-	if err != nil {
+	ext := ctx.GetHeader("Content-Type")
+	img, err := ioutil.ReadAll(ctx.Request.Body)
+	if err != nil || len(img) == 0 {
 		ctx.JSON(400, gin.H{"error": infrastructure.BadRequest})
 		return
 	}
-	err = h.Serv.UpdAvatar(ctx, h.Claims, img)
+	err = h.Serv.UpdAvatar(ctx, h.Claims, img, strings.Split(ext, "/")[1])
 	if err != nil {
 		ctx.JSON(500, gin.H{"error": infrastructure.ServerError})
 		return
@@ -152,6 +154,7 @@ func (h *Handler) GiveSocket(ctx *gin.Context) {
 		err = conn.ReadJSON(&msg)
 		if err != nil {
 			delete(ws.Clients, conn)
+			ctx.JSON(500, gin.H{"error": infrastructure.ServerError})
 			return
 		}
 		ws.Broadcast <- msg

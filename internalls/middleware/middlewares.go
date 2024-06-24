@@ -13,7 +13,7 @@ func Cors(ctx *gin.Context) {
 		ctx.Header("Access-Control-Allow-Methods", "*")
 		ctx.Header("Access-Control-Allow-Headers", "*")
 		ctx.Header("Access-Control-Allow-Credentials", "true")
-		ctx.Header("Content-Type", "application/json")
+		ctx.Header("Content-Type", "application/json, image/png, image/jpeg")
 		ctx.Header("Content-Security-Policy", "default-src 'self';")
 		ctx.AbortWithStatus(200)
 	}
