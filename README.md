@@ -1,6 +1,6 @@
 Hi!
 
-This project just is just single group chat.
+This project is just single group chat.
 
 In this chat you can:
 
