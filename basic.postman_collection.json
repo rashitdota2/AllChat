@@ -1,0 +1,240 @@
+{
+	"info": {
+		"_postman_id": "3c15688f-630e-4d88-b0fa-6f281669474a",
+		"name": "basic",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34133546",
+		"_collection_link": "https://gold-meadow-288600.postman.co/workspace/chat_but_not_gpt~5af77cf4-8eeb-4b49-ad9b-d22350480523/collection/34133546-3c15688f-630e-4d88-b0fa-6f281669474a?action=share&source=collection_link&creator=34133546"
+	},
+	"item": [
+		{
+			"name": "signin",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"login\": \"rashit\",\n    \"key\": \"668090\",\n    \"name\": \"roma\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{basic_url}}/sign-in",
+					"host": [
+						"{{basic_url}}"
+					],
+					"path": [
+						"sign-in"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"login\": \"rashit\",\n    \"key\": \"668090\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{basic_url}}/login",
+					"host": [
+						"{{basic_url}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "refresh_token",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Refresh eyJhbGciOiJIUzM4NCIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjcwMTQwODAsInVzZXJfaWQiOjEsIm5hbWUiOiJiZWdhIn0.6rDJGDxWjoTl9U6Jm3H6B217O23oQCqpzSSsk6t4R_GnTCXJcd58HF8YKEjsv5-9",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{basic_url}}/profile",
+					"host": [
+						"{{basic_url}}"
+					],
+					"path": [
+						"profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "profile",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{basic_url}}/profile",
+					"host": [
+						"{{basic_url}}"
+					],
+					"path": [
+						"profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "avatar",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzM4NCIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTA2NzIxNjAsInVzZXJfaWQiOjEsIm5hbWUiOiJyb21hIn0.hz8OfpFpPzbNbBq83Q_xvUgrv73lNJwAZA3CScN3X3p6aIlsKYJDdDQzvQtNQ5mC",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{basic_url}}/avatar?path=avatars/user_1.jpeg",
+					"host": [
+						"{{basic_url}}"
+					],
+					"path": [
+						"avatar"
+					],
+					"query": [
+						{
+							"key": "path",
+							"value": "avatars/user_1.jpeg"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "socket",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{basic_url}}/socket",
+					"host": [
+						"{{basic_url}}"
+					],
+					"path": [
+						"socket"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "upd profile",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"bega\",\n    \"description\": \"front-end\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{basic_url}}/profile/update",
+					"host": [
+						"{{basic_url}}"
+					],
+					"path": [
+						"profile",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "upd avatar",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "image/jpeg",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "file",
+					"file": {
+						"src": "postman-cloud:///1ef322d0-4733-4170-aac1-c776f0fdd9e9"
+					}
+				},
+				"url": {
+					"raw": "{{basic_url}}/avatar",
+					"host": [
+						"{{basic_url}}"
+					],
+					"path": [
+						"avatar"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
