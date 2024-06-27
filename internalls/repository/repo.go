@@ -47,13 +47,13 @@ func (r *Repository) Registration(ctx context.Context, info models.SignIn) error
 	return nil
 }
 
-func (r *Repository) CheckLogin(ctx context.Context, info models.Auth) (int, string, error) {
-	var id int
-	var name string
-	if err := r.db.QueryRow(ctx, "select id,name from users where login = $1 and key = $2", info.Login, info.Key).Scan(&id, &name); err != nil {
-		return 0, "", err
+func (r *Repository) CheckLogin(ctx context.Context, info models.Auth) (*models.UserProfile, string, error) {
+	var user models.UserProfile
+	var key string
+	if err := r.db.QueryRow(ctx, "select id, name, key from users where login = $1", info.Login).Scan(&user.Id, &user.Name, &key); err != nil {
+		return nil, "", err
 	}
-	return id, name, nil
+	return &user, key, nil
 }
 
 func (r *Repository) GetProfile(ctx context.Context, userId int) (models.UserProfile, error) {

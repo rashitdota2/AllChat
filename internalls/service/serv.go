@@ -7,6 +7,7 @@ import (
 	"github.com/go-redis/redis/v8"
 	"github.com/jackc/pgx/v4"
 	"go.uber.org/zap"
+	"golang.org/x/crypto/bcrypt"
 	"os"
 	"workwithimages/domain/infrastructure"
 	"workwithimages/domain/models"
@@ -28,6 +29,8 @@ func NewService(r repository.RepoInterface, logger *zap.Logger, rdc *redis.Clien
 }
 
 func (srv *Service) Sign(ctx context.Context, info models.SignIn) error {
+	pas, _ := bcrypt.GenerateFromPassword([]byte(info.Key), 7)
+	info.Key = string(pas)
 	if err := srv.r.Registration(ctx, info); err != nil {
 		//need to add check err on pgx err uniq
 		srv.logger.Error("failed to register user", zap.Error(err))
@@ -37,7 +40,7 @@ func (srv *Service) Sign(ctx context.Context, info models.SignIn) error {
 }
 
 func (srv *Service) Login(ctx context.Context, info models.Auth) (string, string, error) {
-	id, name, err := srv.r.CheckLogin(ctx, info)
+	user, key, err := srv.r.CheckLogin(ctx, info)
 	switch {
 	case errors.Is(err, pgx.ErrNoRows):
 		return "", "", infrastructure.ErrIncorrectInfo
@@ -45,7 +48,10 @@ func (srv *Service) Login(ctx context.Context, info models.Auth) (string, string
 		srv.logger.Error("failed to check user", zap.Error(err))
 		return "", "", err
 	}
-	access, refresh, err := GetTokens(id, name)
+	if err = bcrypt.CompareHashAndPassword([]byte(key), []byte(info.Key)); err != nil {
+		return "", "", infrastructure.ErrIncorrectInfo
+	}
+	access, refresh, err := GetTokens(user.Id, user.Name)
 	if err != nil {
 		srv.logger.Error("failed to gen tokens", zap.Error(err))
 		return "", "", err

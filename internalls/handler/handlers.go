@@ -122,7 +122,7 @@ func (h *Handler) UpdAvatar(ctx *gin.Context) {
 func (h *Handler) GiveSocket(ctx *gin.Context) {
 	conn, err := h.Upgrader.Upgrade(ctx.Writer, ctx.Request, nil)
 	if err != nil {
-		ctx.Status(500)
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": infrastructure.BadRequest})
 		return
 	}
 	defer conn.Close()
