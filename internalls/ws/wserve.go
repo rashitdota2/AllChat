@@ -45,6 +45,7 @@ func (ws *WServer) SendTo(msg *models.Message) {
 	for client := range ws.Clients {
 		if client.Id == msg.To {
 			client.Send <- msg
+			return
 		}
 	}
 }

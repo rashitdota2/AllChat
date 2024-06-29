@@ -36,7 +36,7 @@ type UserProfile struct {
 }
 
 type Message struct {
-	From    string `json:"from"`
+	From    int    `json:"from"`
 	To      int    `json:"to"`
 	Message string `json:"message"`
 }

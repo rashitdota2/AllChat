@@ -6,6 +6,7 @@ import (
 	"github.com/gorilla/websocket"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"strings"
 	"workwithimages/domain/infrastructure"
 	"workwithimages/domain/models"
@@ -77,8 +78,19 @@ func (h *Handler) Login(ctx *gin.Context) {
 }
 
 func (h *Handler) GetProfile(ctx *gin.Context) {
-
-	profile, err := h.Serv.GetProfile(ctx, h.Claims.UserId)
+	var id int
+	idstr := ctx.DefaultQuery("id", "0")
+	if idstr == "0" {
+		id = h.Claims.UserId
+	} else {
+		Id, err := strconv.Atoi(idstr)
+		if err != nil {
+			ctx.JSON(400, gin.H{"error": infrastructure.BadRequest})
+			return
+		}
+		id = Id
+	}
+	profile, err := h.Serv.GetProfile(ctx, id)
 	if err != nil {
 		ctx.JSON(500, gin.H{"error": infrastructure.ServerError})
 		return
