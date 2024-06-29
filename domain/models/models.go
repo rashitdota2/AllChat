@@ -36,6 +36,7 @@ type UserProfile struct {
 }
 
 type Message struct {
-	Username string `json:"username"`
-	Message  string `json:"message"`
+	From    string `json:"from"`
+	To      int    `json:"to"`
+	Message string `json:"message"`
 }

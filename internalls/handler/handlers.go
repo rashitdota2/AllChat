@@ -128,6 +128,7 @@ func (h *Handler) GiveSocket(ctx *gin.Context) {
 		return
 	}
 	client := &ws.Client{
+		Id:    h.Claims.UserId,
 		WsHub: h.Ws,
 		Conn:  conn,
 		Send:  make(chan *models.Message),

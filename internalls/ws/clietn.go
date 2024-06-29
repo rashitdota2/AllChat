@@ -7,6 +7,7 @@ import (
 )
 
 type Client struct {
+	Id    int
 	WsHub *WServer
 	Conn  *websocket.Conn
 	Send  chan *models.Message

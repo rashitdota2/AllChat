@@ -31,7 +31,7 @@ func (ws *WServer) WSRun() {
 	for {
 		select {
 		case msg := <-ws.Broadcast:
-			go ws.SendToAll(msg)
+			go ws.SendTo(msg)
 		case client := <-ws.Add:
 			ws.Clients[client] = true
 		case client := <-ws.Delete:
@@ -41,10 +41,10 @@ func (ws *WServer) WSRun() {
 	}
 }
 
-func (ws *WServer) SendToAll(msg *models.Message) {
+func (ws *WServer) SendTo(msg *models.Message) {
 	for client := range ws.Clients {
-		go func() {
+		if client.Id == msg.To {
 			client.Send <- msg
-		}()
+		}
 	}
 }
