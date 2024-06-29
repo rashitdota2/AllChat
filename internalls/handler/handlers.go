@@ -127,8 +127,12 @@ func (h *Handler) GiveSocket(ctx *gin.Context) {
 		//ctx.JSON(http.StatusBadRequest, gin.H{"error": infrastructure.BadRequest})
 		return
 	}
-
-	go ws.ReadPump(conn, h.Ws)
-	go ws.WritePump(conn, h.Ws)
+	client := &ws.Client{
+		WsHub: h.Ws,
+		Conn:  conn,
+		Send:  make(chan *models.Message),
+	}
+	go ws.ReadPump(client)
+	go ws.WritePump(client)
 
 }
