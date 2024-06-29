@@ -122,19 +122,11 @@ func (h *Handler) UpdAvatar(ctx *gin.Context) {
 func (h *Handler) GiveSocket(ctx *gin.Context) {
 	conn, err := h.Upgrader.Upgrade(ctx.Writer, ctx.Request, nil)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": infrastructure.BadRequest})
+		//ctx.JSON(http.StatusBadRequest, gin.H{"error": infrastructure.BadRequest})
 		return
 	}
-	defer conn.Close()
-	ws.Clients[conn] = true
-	for {
-		var msg models.Message
-		err = conn.ReadJSON(&msg)
-		if err != nil {
-			delete(ws.Clients, conn)
-			ctx.JSON(500, gin.H{"error": infrastructure.ServerError})
-			return
-		}
-		ws.Broadcast <- msg
-	}
+
+	go ws.ReadPump(conn)
+	go ws.WritePump(conn)
+
 }
