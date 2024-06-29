@@ -6,10 +6,12 @@ import (
 	"workwithimages/domain/models"
 )
 
-var Clients = make(map[*websocket.Conn]bool)
-var Broadcast = make(chan *models.Message)
-var Delete = make(chan *websocket.Conn)
-var Add = make(chan *websocket.Conn)
+type WServer struct {
+	Clients   map[*websocket.Conn]bool
+	Broadcast chan *models.Message
+	Delete    chan *websocket.Conn
+	Add       chan *websocket.Conn
+}
 
 const (
 	writeWait  = 10 * time.Second
@@ -17,36 +19,45 @@ const (
 	pingPeriod = (pongWait * 9) / 10
 )
 
-func WSRun() {
+func NewWSevrver() *WServer {
+	return &WServer{
+		Clients:   make(map[*websocket.Conn]bool),
+		Broadcast: make(chan *models.Message),
+		Delete:    make(chan *websocket.Conn),
+		Add:       make(chan *websocket.Conn),
+	}
+}
+
+func (ws *WServer) WSRun() {
 	for {
 		select {
-		case msg := <-Broadcast:
-			go SendToAll(msg)
-		case conn := <-Add:
-			Clients[conn] = true
-		case conn := <-Delete:
+		case msg := <-ws.Broadcast:
+			go ws.SendToAll(msg)
+		case conn := <-ws.Add:
+			ws.Clients[conn] = true
+		case conn := <-ws.Delete:
 			conn.Close()
-			delete(Clients, conn)
+			delete(ws.Clients, conn)
 		}
 	}
 }
 
-func ReadPump(conn *websocket.Conn) {
-	Add <- conn
+func ReadPump(conn *websocket.Conn, ws *WServer) {
+	ws.Add <- conn
 	conn.SetReadDeadline(time.Now().Add(pongWait))
 	conn.SetPongHandler(func(t string) error { conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 	for {
 		var msg models.Message
 		err := conn.ReadJSON(&msg)
 		if err != nil {
-			Delete <- conn
+			ws.Delete <- conn
 			return
 		}
-		Broadcast <- &msg
+		ws.Broadcast <- &msg
 	}
 }
 
-func WritePump(conn *websocket.Conn) {
+func WritePump(conn *websocket.Conn, ws *WServer) {
 	ticker := time.NewTicker(pingPeriod)
 	for {
 		select {
@@ -61,8 +72,8 @@ func WritePump(conn *websocket.Conn) {
 	}
 }
 
-func SendToAll(msg *models.Message) {
-	for client := range Clients {
+func (ws *WServer) SendToAll(msg *models.Message) {
+	for client := range ws.Clients {
 		go func(conn *websocket.Conn) {
 			conn.SetWriteDeadline(time.Now().Add(writeWait))
 			err := conn.WriteJSON(msg)

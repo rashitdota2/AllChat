@@ -15,14 +15,16 @@ import (
 
 type Handler struct {
 	Serv     service.ServiceInterface
-	Upgrader *websocket.Upgrader
 	Claims   models.TokenClaims
+	Upgrader *websocket.Upgrader
+	Ws       *ws.WServer
 }
 
-func NewHandler(s service.ServiceInterface, upg *websocket.Upgrader) *Handler {
+func NewHandler(s service.ServiceInterface, upg *websocket.Upgrader, ws *ws.WServer) *Handler {
 	return &Handler{
 		Serv:     s,
 		Upgrader: upg,
+		Ws:       ws,
 	}
 }
 
@@ -126,7 +128,7 @@ func (h *Handler) GiveSocket(ctx *gin.Context) {
 		return
 	}
 
-	go ws.ReadPump(conn)
-	go ws.WritePump(conn)
+	go ws.ReadPump(conn, h.Ws)
+	go ws.WritePump(conn, h.Ws)
 
 }

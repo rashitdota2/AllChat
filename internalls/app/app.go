@@ -38,9 +38,11 @@ func Run() {
 
 	var upgrader = websocket.Upgrader{}
 
-	handl := handler.NewHandler(service, &upgrader)
+	wserv := ws.NewWSevrver()
 
-	go ws.WSRun()
+	go wserv.WSRun()
+
+	handl := handler.NewHandler(service, &upgrader, wserv)
 
 	err = server.RUN(configs.HOST, handl.Init())
 	if err != nil {
